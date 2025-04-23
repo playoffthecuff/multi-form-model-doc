@@ -8,5 +8,12 @@
     "indentWidth": 1,
     "lineWidth": 80,
     "lineEnding": "lf"
+  },
+  "linter": {
+    "rules": {
+      "complexity": {
+        "noForEach": "off"
+      }
+    }
   }
 }
