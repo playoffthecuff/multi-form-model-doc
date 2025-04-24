@@ -13,7 +13,7 @@ const checkUser = async () => {
 	if (!user) throw new Error("User not found");
 };
 
-export async function getQuantityUnits() {
+export async function getQuantities() {
 	return await prisma.quantity.findMany({
 		orderBy: {
 			name: "asc",
@@ -21,9 +21,20 @@ export async function getQuantityUnits() {
 	});
 }
 
-export async function addQuantityUnit(rawData: QuantitySchema) {
+export async function getQuantityUnit(id: number) {
+	return await prisma.quantity.findUnique({
+		where: { id },
+		include: {
+			units: true,
+		},
+	});
+}
+
+export type QuantityUnit = Awaited<ReturnType<typeof getQuantityUnit>>;
+
+export async function addQuantityUnits(rawData: QuantitySchema) {
 	const parsedData = quantitySchema.safeParse(rawData);
-	if (!parsedData.success) throw new Error("invalid data");
+	if (!parsedData.success) throw new Error("Invalid data");
 	const { name, description, units } = parsedData.data;
 	try {
 		await prisma.quantity.create({
@@ -43,6 +54,33 @@ export async function addQuantityUnit(rawData: QuantitySchema) {
 	} catch (e) {
 		if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002")
 			throw new Error("Such a quantity already exists");
+		throw new Error("Something went wrong");
+	}
+}
+export async function editQuantityUnits(rawData: QuantitySchema, id: number) {
+	const parsedData = quantitySchema.safeParse(rawData);
+	if (!parsedData.success) throw new Error("Invalid data");
+	const { name, description, units } = parsedData.data;
+	try {
+		await prisma.quantity.update({
+			where: {
+				id,
+			},
+			data: {
+				name,
+				description,
+				units: {
+					deleteMany: {},
+					create: units.map((v) => ({
+						name: v.name,
+						symbol: v.symbol,
+						factor: v.factor,
+						isBase: v.isBase,
+					})),
+				},
+			},
+		});
+	} catch {
 		throw new Error("Something went wrong");
 	}
 }

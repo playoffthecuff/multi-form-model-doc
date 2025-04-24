@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 
-import { addQuantityUnits } from "@/actions/quantity-units";
+import { QuantityUnit, editQuantityUnits } from "@/actions/quantity-units";
 import { Button } from "@/components/ui/button";
 import {
 	Form,
@@ -15,20 +15,23 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Plus, Trash } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import BadgePopover from "../common/badge-popover";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Separator } from "../ui/separator";
 import { type QuantitySchema, quantitySchema } from "./schema";
 
-export function CreateQuantity() {
+export function EditQuantity({
+	quantity,
+}: { quantity: NonNullable<QuantityUnit> }) {
 	const form = useForm<QuantitySchema>({
 		resolver: zodResolver(quantitySchema),
 		defaultValues: {
-			name: "",
-			description: "",
-			units: [{ factor: 1, isBase: true, name: "", symbol: "" }],
-			baseUnitIndex: 0,
+			name: quantity.name,
+			description: quantity.description,
+			units: quantity.units,
+			baseUnitIndex: quantity.units.findIndex((v) => v.isBase),
 		},
 	});
 
@@ -39,7 +42,7 @@ export function CreateQuantity() {
 
 	async function onSubmit(data: QuantitySchema) {
 		try {
-			await addQuantityUnits(data);
+			await editQuantityUnits(data, quantity.id);
 			toast.success("Successfully submitted:", {
 				description: (
 					<pre className="mt-2 w-80 rounded-md bg-slate-950 p-4">
