@@ -6,11 +6,7 @@ import {
 } from "@/components/quantity-forms/schema";
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
-
-function isPrismaDuplicateError(e: unknown): e is { code: string } {
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  return typeof e === "object" && e !== null && "code" in e && (e as any).code === "P2002";
-}
+import { Prisma } from "@prisma/client";
 
 const checkUser = async () => {
 	const user = await currentUser();
@@ -45,9 +41,8 @@ export async function addQuantityUnit(rawData: QuantitySchema) {
 			},
 		});
 	} catch (e) {
-		if (isPrismaDuplicateError(e)) {
+		if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002")
 			throw new Error("Such a quantity already exists");
-		}
 		throw new Error("Something went wrong");
 	}
 }
