@@ -2,7 +2,7 @@ import AuthButton from "./auth-button";
 import { ModeToggler } from "./mode-toggler";
 import Navigation, { type NavigationLink } from "./navigation";
 
-const links: NavigationLink[] = [{href: "/units", title: "Units"},{ href: "/sign-in", title: "Sign In" }];
+const links: NavigationLink[] = [{href: "/units/add", title: "Add"}, {href: "/units/edit", title: "Edit"}, { href: "/sign-in", title: "Sign In" }];
 
 export default function Header() {
 	return (
