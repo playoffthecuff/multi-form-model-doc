@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 
+import { addQuantityUnit } from "@/actions/quantity-units";
 import { Button } from "@/components/ui/button";
 import {
 	Form,
@@ -18,8 +19,7 @@ import { toast } from "sonner";
 import BadgePopover from "../common/badge-popover";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Separator } from "../ui/separator";
-import { addQuantityUnit } from "@/actions/quantity-units";
-import { quantitySchema, type QuantitySchema } from "./schema";
+import { type QuantitySchema, quantitySchema } from "./schema";
 
 export function CreateQuantity() {
 	const form = useForm<QuantitySchema>({
@@ -46,11 +46,11 @@ export function CreateQuantity() {
 						<code className="text-white">{JSON.stringify(data, null, 2)}</code>
 					</pre>
 				),
-			})
+			});
 		} catch (e) {
 			toast.error("Oops", {
-				description: (e as Error).message
-			})
+				description: (e as Error).message,
+			});
 		}
 	}
 
@@ -69,7 +69,7 @@ export function CreateQuantity() {
 								<FormLabel>Name</FormLabel>
 							</div>
 							<FormControl>
-								<Input placeholder="" {...field} />
+								<Input {...field} />
 							</FormControl>
 							<div className="min-h-5">
 								<FormMessage />
@@ -89,7 +89,7 @@ export function CreateQuantity() {
 								<FormLabel>Description</FormLabel>
 							</div>
 							<FormControl>
-								<Input placeholder="" {...field} />
+								<Input {...field} />
 							</FormControl>
 						</FormItem>
 					)}
@@ -125,7 +125,9 @@ export function CreateQuantity() {
 															{...field}
 															onChange={async (e) => {
 																field.onChange(e);
-																const unitNames = form.getValues("units").map((_, i) => `units.${i}.name` as const);
+																const unitNames = form
+																	.getValues("units")
+																	.map((_, i) => `units.${i}.name` as const);
 																await form.trigger(unitNames);
 															}}
 														/>
@@ -148,7 +150,9 @@ export function CreateQuantity() {
 																{...field}
 																onChange={async (e) => {
 																	field.onChange(e);
-																	const unitSymbols = form.getValues("units").map((_, i) => `units.${i}.symbol` as const);
+																	const unitSymbols = form
+																		.getValues("units")
+																		.map((_, i) => `units.${i}.symbol` as const);
 																	await form.trigger(unitSymbols);
 																}}
 															/>
@@ -210,6 +214,7 @@ export function CreateQuantity() {
 												className="mt-4.5 flex-grow"
 												variant="secondary"
 												onClick={() => remove(index)}
+												disabled={fields.length < 2}
 											>
 												Remove Unit
 												<Trash />
