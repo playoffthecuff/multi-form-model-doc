@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,62 +18,16 @@ import { toast } from "sonner";
 import BadgePopover from "../common/badge-popover";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Separator } from "../ui/separator";
-
-const Schema = z.object({
-	name: z.string().min(1, "Required"),
-	description: z.string(),
-	units: z
-		.array(
-			z.object({
-				name: z.string().min(1, "Required"),
-				symbol: z.string().max(10).min(1, "Required"),
-				factor: z.number().min(0),
-				isBase: z.boolean(),
-			}),
-		)
-		.superRefine((units, ctx) => {
-			const seen = {
-				name: new Map<string | number, number[]>(),
-				symbol: new Map<string | number, number[]>(),
-				factor: new Map<string | number, number[]>(),
-			};
-
-			units.forEach((v, i) => {
-				for (const key of ["name", "symbol", "factor"] as const) {
-					const value = v[key];
-					const map = seen[key];
-					if (map.has(value)) {
-						map.get(value)?.push(i);
-					} else {
-						map.set(value, [i]);
-					}
-				}
-			});
-
-			for (const [key, map] of Object.entries(seen)) {
-				for (const [_, indexes] of map.entries()) {
-					if (indexes.length > 1) {
-						indexes.forEach((index) => {
-							ctx.addIssue({
-								path: [index, key],
-								code: z.ZodIssueCode.custom,
-								message: `${key} must be unique`,
-							});
-						});
-					}
-				}
-			}
-		}),
-	baseUnitIndex: z.number(),
-});
+import { addQuantityUnit } from "@/actions/quantity-units";
+import { quantitySchema, type QuantitySchema } from "./schema";
 
 export function CreateQuantity() {
-	const form = useForm<z.infer<typeof Schema>>({
-		resolver: zodResolver(Schema),
+	const form = useForm<QuantitySchema>({
+		resolver: zodResolver(quantitySchema),
 		defaultValues: {
 			name: "",
 			description: "",
-			units: [{ factor: 0, isBase: true, name: "", symbol: "" }],
+			units: [{ factor: 1, isBase: true, name: "", symbol: "" }],
 			baseUnitIndex: 0,
 		},
 	});
@@ -84,14 +37,21 @@ export function CreateQuantity() {
 		name: "units",
 	});
 
-	function onSubmit(data: z.infer<typeof Schema>) {
-		toast("You submitted the following values:", {
-			description: (
-				<pre className="mt-2 w-80 rounded-md bg-slate-950 p-4">
-					<code className="text-white">{JSON.stringify(data, null, 2)}</code>
-				</pre>
-			),
-		});
+	async function onSubmit(data: QuantitySchema) {
+		try {
+			await addQuantityUnit(data);
+			toast.success("Successfully submitted:", {
+				description: (
+					<pre className="mt-2 w-80 rounded-md bg-slate-950 p-4">
+						<code className="text-white">{JSON.stringify(data, null, 2)}</code>
+					</pre>
+				),
+			})
+		} catch (e) {
+			toast.error("Oops", {
+				description: (e as Error).message
+			})
+		}
 	}
 
 	return (
@@ -208,6 +168,7 @@ export function CreateQuantity() {
 														<FormControl>
 															<Input
 																type="number"
+																step={0.000001}
 																{...field}
 																min={0}
 																onChange={async (e) => {

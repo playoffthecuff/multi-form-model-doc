@@ -1013,16 +1013,19 @@ export namespace Prisma {
   export type QuantityMinAggregateOutputType = {
     id: number | null
     name: string | null
+    description: string | null
   }
 
   export type QuantityMaxAggregateOutputType = {
     id: number | null
     name: string | null
+    description: string | null
   }
 
   export type QuantityCountAggregateOutputType = {
     id: number
     name: number
+    description: number
     _all: number
   }
 
@@ -1038,16 +1041,19 @@ export namespace Prisma {
   export type QuantityMinAggregateInputType = {
     id?: true
     name?: true
+    description?: true
   }
 
   export type QuantityMaxAggregateInputType = {
     id?: true
     name?: true
+    description?: true
   }
 
   export type QuantityCountAggregateInputType = {
     id?: true
     name?: true
+    description?: true
     _all?: true
   }
 
@@ -1140,6 +1146,7 @@ export namespace Prisma {
   export type QuantityGroupByOutputType = {
     id: number
     name: string
+    description: string
     _count: QuantityCountAggregateOutputType | null
     _avg: QuantityAvgAggregateOutputType | null
     _sum: QuantitySumAggregateOutputType | null
@@ -1164,6 +1171,7 @@ export namespace Prisma {
   export type QuantitySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    description?: boolean
     units?: boolean | Quantity$unitsArgs<ExtArgs>
     _count?: boolean | QuantityCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["quantity"]>
@@ -1171,19 +1179,22 @@ export namespace Prisma {
   export type QuantitySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    description?: boolean
   }, ExtArgs["result"]["quantity"]>
 
   export type QuantitySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    description?: boolean
   }, ExtArgs["result"]["quantity"]>
 
   export type QuantitySelectScalar = {
     id?: boolean
     name?: boolean
+    description?: boolean
   }
 
-  export type QuantityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name", ExtArgs["result"]["quantity"]>
+  export type QuantityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description", ExtArgs["result"]["quantity"]>
   export type QuantityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     units?: boolean | Quantity$unitsArgs<ExtArgs>
     _count?: boolean | QuantityCountOutputTypeDefaultArgs<ExtArgs>
@@ -1199,6 +1210,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       name: string
+      description: string
     }, ExtArgs["result"]["quantity"]>
     composites: {}
   }
@@ -1625,6 +1637,7 @@ export namespace Prisma {
   interface QuantityFieldRefs {
     readonly id: FieldRef<"Quantity", 'Int'>
     readonly name: FieldRef<"Quantity", 'String'>
+    readonly description: FieldRef<"Quantity", 'String'>
   }
     
 
@@ -3184,7 +3197,8 @@ export namespace Prisma {
 
   export const QuantityScalarFieldEnum: {
     id: 'id',
-    name: 'name'
+    name: 'name',
+    description: 'description'
   };
 
   export type QuantityScalarFieldEnum = (typeof QuantityScalarFieldEnum)[keyof typeof QuantityScalarFieldEnum]
@@ -3281,27 +3295,31 @@ export namespace Prisma {
     NOT?: QuantityWhereInput | QuantityWhereInput[]
     id?: IntFilter<"Quantity"> | number
     name?: StringFilter<"Quantity"> | string
+    description?: StringFilter<"Quantity"> | string
     units?: UnitListRelationFilter
   }
 
   export type QuantityOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
+    description?: SortOrder
     units?: UnitOrderByRelationAggregateInput
   }
 
   export type QuantityWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    name?: string
     AND?: QuantityWhereInput | QuantityWhereInput[]
     OR?: QuantityWhereInput[]
     NOT?: QuantityWhereInput | QuantityWhereInput[]
-    name?: StringFilter<"Quantity"> | string
+    description?: StringFilter<"Quantity"> | string
     units?: UnitListRelationFilter
-  }, "id">
+  }, "id" | "name">
 
   export type QuantityOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
+    description?: SortOrder
     _count?: QuantityCountOrderByAggregateInput
     _avg?: QuantityAvgOrderByAggregateInput
     _max?: QuantityMaxOrderByAggregateInput
@@ -3315,6 +3333,7 @@ export namespace Prisma {
     NOT?: QuantityScalarWhereWithAggregatesInput | QuantityScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Quantity"> | number
     name?: StringWithAggregatesFilter<"Quantity"> | string
+    description?: StringWithAggregatesFilter<"Quantity"> | string
   }
 
   export type UnitWhereInput = {
@@ -3381,38 +3400,45 @@ export namespace Prisma {
 
   export type QuantityCreateInput = {
     name: string
+    description: string
     units?: UnitCreateNestedManyWithoutQuantityInput
   }
 
   export type QuantityUncheckedCreateInput = {
     id?: number
     name: string
+    description: string
     units?: UnitUncheckedCreateNestedManyWithoutQuantityInput
   }
 
   export type QuantityUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     units?: UnitUpdateManyWithoutQuantityNestedInput
   }
 
   export type QuantityUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     units?: UnitUncheckedUpdateManyWithoutQuantityNestedInput
   }
 
   export type QuantityCreateManyInput = {
     id?: number
     name: string
+    description: string
   }
 
   export type QuantityUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
   }
 
   export type QuantityUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
   }
 
   export type UnitCreateInput = {
@@ -3513,6 +3539,7 @@ export namespace Prisma {
   export type QuantityCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    description?: SortOrder
   }
 
   export type QuantityAvgOrderByAggregateInput = {
@@ -3522,11 +3549,13 @@ export namespace Prisma {
   export type QuantityMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    description?: SortOrder
   }
 
   export type QuantityMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    description?: SortOrder
   }
 
   export type QuantitySumOrderByAggregateInput = {
@@ -3884,11 +3913,13 @@ export namespace Prisma {
 
   export type QuantityCreateWithoutUnitsInput = {
     name: string
+    description: string
   }
 
   export type QuantityUncheckedCreateWithoutUnitsInput = {
     id?: number
     name: string
+    description: string
   }
 
   export type QuantityCreateOrConnectWithoutUnitsInput = {
@@ -3909,11 +3940,13 @@ export namespace Prisma {
 
   export type QuantityUpdateWithoutUnitsInput = {
     name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
   }
 
   export type QuantityUncheckedUpdateWithoutUnitsInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
   }
 
   export type UnitCreateManyQuantityInput = {

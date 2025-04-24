@@ -15,9 +15,10 @@ datasource db {
 }
 
 model Quantity {
-  id    Int    @id @default(autoincrement())
-  name  String
-  units Unit[]
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String
+  units       Unit[]
 }
 
 model Unit {
