@@ -8,6 +8,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "../ui/card";
+import TooltipButton from "../common/tooltip-button";
 
 interface Props {
 	items: { name: string; description: string; id: number }[];
@@ -23,11 +24,11 @@ export default function EditableList({ items }: Props) {
 						<CardDescription className="w-fit flex-grow text-base leading-4.5">{v.description}</CardDescription>
 					</CardHeader>
 					<CardFooter className="p-0">
-						<Button asChild variant={"secondary"}>
+						<TooltipButton variant={"secondary"} text="Edit Quantity" size="icon">
 							<Link href={`./edit/${v.id}`}>
 								<Pencil />
 							</Link>
-						</Button>
+						</TooltipButton>
 					</CardFooter>
 				</Card>
 			))}
