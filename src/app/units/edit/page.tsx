@@ -5,7 +5,7 @@ export default async function EditQuantitiesPage() {
 	const quantityUnits = await getQuantities();
 	return (
 		<div className="flex flex-grow justify-center items-center flex-col gap-y-6 w-full">
-			<EditableList items={quantityUnits} />
+			<EditableList initialItems={quantityUnits} />
 		</div>
 	);
 }

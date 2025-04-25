@@ -84,3 +84,15 @@ export async function editQuantityUnits(rawData: QuantitySchema, id: number) {
 		throw new Error("Something went wrong");
 	}
 }
+
+export async function deleteQuantityUnits(id: number) {
+	try {
+		await prisma.quantity.delete({
+			where: {
+				id,
+			},
+		});
+	} catch {
+		throw new Error("Something went wrong");
+	}
+}

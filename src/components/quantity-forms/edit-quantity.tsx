@@ -16,18 +16,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { ChevronLeft, Pencil, Plus, Repeat, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { toast } from "sonner";
 import BadgePopover from "../common/badge-popover";
-import { SuccessDialog } from "../common/success-dialog";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Separator } from "../ui/separator";
 import { type QuantitySchema, quantitySchema } from "./schema";
+import toastCommonProps from "./toast-common-props";
 
 export function EditQuantity({
 	quantity,
 }: { quantity: NonNullable<QuantityUnit> }) {
-	const [open, setOpen] = useState(false);
 	const form = useForm<QuantitySchema>({
 		resolver: zodResolver(quantitySchema),
 		defaultValues: {
@@ -46,24 +44,7 @@ export function EditQuantity({
 
 	async function onSubmit(data: QuantitySchema) {
 		toast.promise(editQuantityUnits(data, quantity.id), {
-			loading: "Loading",
-			duration: Number.POSITIVE_INFINITY,
-			cancelButtonStyle: {
-				marginLeft: 28,
-				flexGrow: 1,
-				minWidth: "fit-content",
-				borderRadius: 6,
-				padding: 8,
-				height: "auto",
-			},
-			actionButtonStyle: {
-				marginLeft: 28,
-				flexGrow: 1,
-				minWidth: "fit-content",
-				borderRadius: 6,
-				padding: 8,
-				height: "auto",
-			},
+			...toastCommonProps,
 			success: () => {
 				return {
 					message: "Successfully submitted:",

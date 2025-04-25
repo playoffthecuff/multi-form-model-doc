@@ -21,6 +21,7 @@ import BadgePopover from "../common/badge-popover";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Separator } from "../ui/separator";
 import { type QuantitySchema, quantitySchema } from "./schema";
+import toastCommonProps from "./toast-common-props";
 
 export function CreateQuantity() {
 	const router = useRouter();
@@ -42,24 +43,7 @@ export function CreateQuantity() {
 
 	async function onSubmit(data: QuantitySchema) {
 		toast.promise(addQuantityUnits(data), {
-			loading: "Loading",
-			duration: Number.POSITIVE_INFINITY,
-			cancelButtonStyle: {
-				marginLeft: 28,
-				flexGrow: 1,
-				minWidth: "fit-content",
-				borderRadius: 6,
-				padding: 8,
-				height: "auto",
-			},
-			actionButtonStyle: {
-				marginLeft: 28,
-				flexGrow: 1,
-				minWidth: "fit-content",
-				borderRadius: 6,
-				padding: 8,
-				height: "auto",
-			},
+			...toastCommonProps,
 			success: () => {
 				return {
 					message: "Successfully submitted:",

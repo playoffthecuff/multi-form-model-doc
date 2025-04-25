@@ -16,7 +16,7 @@ export default function BadgePopover({
 			<PopoverTrigger asChild>
 				<Badge variant={variant} className="cursor-pointer">{children}</Badge>
 			</PopoverTrigger>
-			<PopoverContent side="top" className="px-2 py-1 text-sm w-fit bg-background/60 backdrop-blur-xs">{text}</PopoverContent>
+			<PopoverContent side="top" className="px-2 py-1 text-base w-fit bg-background/60 backdrop-blur-xs">{text}</PopoverContent>
 		</Popover>
 	);
 }
