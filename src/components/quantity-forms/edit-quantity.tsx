@@ -309,18 +309,6 @@ export function EditQuantity({
 					Submit
 				</Button>
 			</form>
-			<SuccessDialog
-				open={open}
-				onAction={() => {
-					setOpen(false);
-					router.back();
-				}}
-				onCancel={() => setOpen(false)}
-				title="Success!"
-				description="Data saved"
-				actionText="To the previous page"
-				cancelText="Continue editing"
-			/>
 		</Form>
 	);
 }
