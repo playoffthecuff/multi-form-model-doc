@@ -51,7 +51,7 @@ export default function RootLayout({
 							</main>
 						</TooltipProvider>
 					</ThemeProvider>
-					<Toaster />
+					<Toaster closeButton/>
 				</body>
 			</html>
 		</ClerkProvider>

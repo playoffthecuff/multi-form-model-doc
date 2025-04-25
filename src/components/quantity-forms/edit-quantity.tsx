@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 
-import { QuantityUnit, editQuantityUnits } from "@/actions/quantity-units";
+import { type QuantityUnit, editQuantityUnits } from "@/actions/quantity-units";
 import { Button } from "@/components/ui/button";
 import {
 	Form,
@@ -14,10 +14,12 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Plus, Trash } from "lucide-react";
+import { ChevronLeft, Pencil, Plus, Repeat, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
 import BadgePopover from "../common/badge-popover";
+import { SuccessDialog } from "../common/success-dialog";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Separator } from "../ui/separator";
 import { type QuantitySchema, quantitySchema } from "./schema";
@@ -25,6 +27,7 @@ import { type QuantitySchema, quantitySchema } from "./schema";
 export function EditQuantity({
 	quantity,
 }: { quantity: NonNullable<QuantityUnit> }) {
+	const [open, setOpen] = useState(false);
 	const form = useForm<QuantitySchema>({
 		resolver: zodResolver(quantitySchema),
 		defaultValues: {
@@ -34,6 +37,7 @@ export function EditQuantity({
 			baseUnitIndex: quantity.units.findIndex((v) => v.isBase),
 		},
 	});
+	const router = useRouter();
 
 	const { fields, append, remove } = useFieldArray({
 		control: form.control,
@@ -41,20 +45,78 @@ export function EditQuantity({
 	});
 
 	async function onSubmit(data: QuantitySchema) {
-		try {
-			await editQuantityUnits(data, quantity.id);
-			toast.success("Successfully submitted:", {
-				description: (
-					<pre className="mt-2 w-80 rounded-md bg-slate-950 p-4">
-						<code className="text-white">{JSON.stringify(data, null, 2)}</code>
-					</pre>
-				),
-			});
-		} catch (e) {
-			toast.error("Oops", {
-				description: (e as Error).message,
-			});
-		}
+		toast.promise(editQuantityUnits(data, quantity.id), {
+			loading: "Loading",
+			duration: Number.POSITIVE_INFINITY,
+			cancelButtonStyle: {
+				marginLeft: 28,
+				flexGrow: 1,
+				minWidth: "fit-content",
+				borderRadius: 6,
+				padding: 8,
+				height: "auto",
+			},
+			actionButtonStyle: {
+				marginLeft: 28,
+				flexGrow: 1,
+				minWidth: "fit-content",
+				borderRadius: 6,
+				padding: 8,
+				height: "auto",
+			},
+			success: () => {
+				return {
+					message: "Successfully submitted:",
+					description: (
+						<pre className="mt-2 w-full rounded-md bg-slate-950 p-4 overflow-x-auto">
+							<code className="text-white">{JSON.stringify(data, null, 2)}</code>
+						</pre>
+					),
+					action: {
+						label: (
+							<div className="flex text-sm gap-x-4 justify-center flex-grow items-center">
+								<ChevronLeft size={16} />
+								To the previous page
+							</div>
+						),
+						onClick: () => router.back(),
+					},
+					cancel: {
+						label: (
+							<div className="flex text-sm gap-x-4 justify-center flex-grow items-center">
+								<Pencil size={16} />
+								Continue edinting
+							</div>
+						),
+						onClick: () => void null,
+					},
+				};
+			},
+			error: () => {
+				return {
+					message: "Oops",
+					description: "Something went wrong",
+					action: {
+						label: (
+							<div className="flex text-sm gap-x-4 justify-center flex-grow items-center">
+								<Repeat size={16} />
+								Try again
+							</div>
+						),
+						onClick: () => onSubmit(data),
+					},
+					cancel: {
+						label: (
+							<div className="flex text-sm gap-x-4 justify-center flex-grow items-center">
+								<ChevronLeft size={16} />
+								To the previous page
+							</div>
+						),
+						onClick: () => router.back(),
+					},
+				};
+			},
+		});
 	}
 
 	return (
@@ -247,6 +309,18 @@ export function EditQuantity({
 					Submit
 				</Button>
 			</form>
+			<SuccessDialog
+				open={open}
+				onAction={() => {
+					setOpen(false);
+					router.back();
+				}}
+				onCancel={() => setOpen(false)}
+				title="Success!"
+				description="Data saved"
+				actionText="To the previous page"
+				cancelText="Continue editing"
+			/>
 		</Form>
 	);
 }

@@ -1,0 +1,10 @@
+.sonner[data-sonner-toast][data-styled="true"] {
+  
+    &[data-expanded='true'] {
+      height: auto;
+    }
+  
+    & > div[data-content] {
+      width: 292px;
+    }
+  }

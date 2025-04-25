@@ -14,7 +14,8 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Plus, Trash } from "lucide-react";
+import { ChevronLeft, Pencil, Plus, Repeat, Trash } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import BadgePopover from "../common/badge-popover";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
@@ -22,6 +23,8 @@ import { Separator } from "../ui/separator";
 import { type QuantitySchema, quantitySchema } from "./schema";
 
 export function CreateQuantity() {
+	const router = useRouter();
+
 	const form = useForm<QuantitySchema>({
 		resolver: zodResolver(quantitySchema),
 		defaultValues: {
@@ -38,20 +41,78 @@ export function CreateQuantity() {
 	});
 
 	async function onSubmit(data: QuantitySchema) {
-		try {
-			await addQuantityUnits(data);
-			toast.success("Successfully submitted:", {
-				description: (
-					<pre className="mt-2 w-80 rounded-md bg-slate-950 p-4">
-						<code className="text-white">{JSON.stringify(data, null, 2)}</code>
-					</pre>
-				),
-			});
-		} catch (e) {
-			toast.error("Oops", {
-				description: (e as Error).message,
-			});
-		}
+		toast.promise(addQuantityUnits(data), {
+			loading: "Loading",
+			duration: Number.POSITIVE_INFINITY,
+			cancelButtonStyle: {
+				marginLeft: 28,
+				flexGrow: 1,
+				minWidth: "fit-content",
+				borderRadius: 6,
+				padding: 8,
+				height: "auto",
+			},
+			actionButtonStyle: {
+				marginLeft: 28,
+				flexGrow: 1,
+				minWidth: "fit-content",
+				borderRadius: 6,
+				padding: 8,
+				height: "auto",
+			},
+			success: () => {
+				return {
+					message: "Successfully submitted:",
+					description: (
+						<pre className="mt-2 w-full rounded-md bg-slate-950 p-4 overflow-x-auto">
+							<code className="text-white">{JSON.stringify(data, null, 2)}</code>
+						</pre>
+					),
+					action: {
+						label: (
+							<div className="flex text-sm gap-x-4 justify-center flex-grow items-center">
+								<ChevronLeft size={16} />
+								To the previous page
+							</div>
+						),
+						onClick: () => router.back(),
+					},
+					cancel: {
+						label: (
+							<div className="flex text-sm gap-x-4 justify-center flex-grow items-center">
+								<Plus size={16} />
+								Add next quantity
+							</div>
+						),
+						onClick: () => form.reset(),
+					},
+				};
+			},
+			error: () => {
+				return {
+					message: "Oops",
+					description: "Something went wrong",
+					action: {
+						label: (
+							<div className="flex text-sm gap-x-4 justify-center flex-grow items-center">
+								<Repeat size={16} />
+								Try again
+							</div>
+						),
+						onClick: () => onSubmit(data),
+					},
+					cancel: {
+						label: (
+							<div className="flex text-sm gap-x-4 justify-center flex-grow items-center">
+								<Pencil size={16} />
+								Edit data
+							</div>
+						),
+						onClick: () => void null,
+					},
+				};
+			},
+		});
 	}
 
 	return (
