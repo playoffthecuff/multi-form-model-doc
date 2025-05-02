@@ -12,7 +12,6 @@ import {
 	dropTargetForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { useEffect, useRef, useState } from "react";
-import type { FieldType } from "../card-wrapper";
 import EdgeHighlight from "./edge-highlight";
 import CheckboxField, { type CheckboxData } from "./checkbox-field";
 import type { DateData } from "./date-field";
@@ -21,6 +20,7 @@ import type { InputData } from "./input-field";
 import InputFormCard from "./input-field";
 import type { SelectData } from "./select-field";
 import SelectField from "./select-field";
+import type { FieldType } from "../types";
 
 export type FieldData = CheckboxData | InputData | SelectData | DateData;
 

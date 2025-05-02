@@ -4,12 +4,12 @@ import { autoScrollWindowForElements } from "@atlaskit/pragmatic-drag-and-drop-a
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { reorder } from "@atlaskit/pragmatic-drag-and-drop/reorder";
 import { useEffect, useRef, useState } from "react";
-import type { FieldType } from "./card-wrapper";
 import type { CheckboxData } from "./fields/checkbox-field";
 import type { DateData } from "./fields/date-field";
 import DraggableField, { type FieldData } from "./fields/draggable-field";
 import type { InputData } from "./fields/input-field";
 import type { SelectData } from "./fields/select-field";
+import type { FieldType } from "./types";
 
 export default function DroppableArea() {
 	const containerRef = useRef(null);
@@ -44,8 +44,9 @@ export default function DroppableArea() {
 	const addNewCheckboxByIndex = (index: number) =>
 		addNewByIndex(index, "checkbox");
 
-	const deleteByIndex = (index: number) =>
-		setElements(elements.filter((_, i) => i !== index));
+	const deleteByIndex = (index: number) => {
+		setCards(cards.filter((_, i) => i !== index));
+	};
 
 	useEffect(() => {
 		const el = dropZoneRef.current;
@@ -62,7 +63,6 @@ export default function DroppableArea() {
 				return source.data.isTemplate as boolean;
 			},
 			onDrop({ source }) {
-				console.log(source);
 				setEntered(false);
 				const checkboxTemplateData: CheckboxData = {
 					label: "label",
