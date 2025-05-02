@@ -60,7 +60,7 @@ const schema = z.object({
 	type: z.literal("date"),
 });
 
-export default function DateFormCard({
+export default function DateField({
 	label,
 	description,
 	name,

@@ -5,11 +5,11 @@ import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element
 import { reorder } from "@atlaskit/pragmatic-drag-and-drop/reorder";
 import { useEffect, useRef, useState } from "react";
 import type { FieldType } from "./card-wrapper";
-import type { CheckboxData } from "./checkbox/checkbox-form-card";
-import DraggableCard, { type FieldData } from "./checkbox/draggable-card";
-import type { InputData } from "./checkbox/input-form-card";
-import type { SelectData } from "./checkbox/select-form-card";
-import type { DateData } from "./checkbox/date-form-card";
+import type { CheckboxData } from "./fields/checkbox-field";
+import type { DateData } from "./fields/date-field";
+import DraggableField, { type FieldData } from "./fields/draggable-field";
+import type { InputData } from "./fields/input-field";
+import type { SelectData } from "./fields/select-field";
 
 export default function DroppableArea() {
 	const containerRef = useRef(null);
@@ -90,7 +90,7 @@ export default function DroppableArea() {
 					name: crypto.randomUUID(),
 					type: "date",
 					description: "description",
-					placeholder: "Pick a date"
+					placeholder: "Pick a date",
 				};
 
 				let card: FieldData;
@@ -123,7 +123,7 @@ export default function DroppableArea() {
 			className="w-68 rounded-xl text-muted-foreground flex flex-col gap-y-2 bg-muted"
 		>
 			{cards.map((v, i) => (
-				<DraggableCard
+				<DraggableField
 					key={v.name}
 					cardProps={v}
 					add={() => addNewCheckboxByIndex(i)}

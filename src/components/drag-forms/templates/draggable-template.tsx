@@ -1,11 +1,11 @@
 import { Card } from "@/components/ui/card";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { useEffect, useRef, useState } from "react";
-import type { FieldType } from "../card-wrapper";
-import CheckboxTemplate2 from "./checkbox-template2";
-import SelectTemplate2 from "./select-template-2";
-import InputTemplate2 from "./input-template-2";
-import DateTemplate2 from "./date-template-2";
+import CheckboxTemplate from "./checkbox-template";
+import DateTemplate from "./date-template";
+import InputTemplate from "./input-template";
+import SelectTemplate from "./select-template";
+import type { FieldType } from "../types";
 
 export default function DraggableTemplate({
 	fieldType,
@@ -31,10 +31,10 @@ export default function DraggableTemplate({
 			ref={cardRef}
 			style={{ opacity: dragging ? 0.4 : 1 }}
 		>
-			{fieldType === "checkbox" && <CheckboxTemplate2 />}
-			{fieldType === "input" && <InputTemplate2 />}
-			{fieldType === "select" && <SelectTemplate2 />}
-			{fieldType === "date" && <DateTemplate2 />}
+			{fieldType === "checkbox" && <CheckboxTemplate />}
+			{fieldType === "input" && <InputTemplate />}
+			{fieldType === "select" && <SelectTemplate />}
+			{fieldType === "date" && <DateTemplate />}
 		</Card>
 	);
 }

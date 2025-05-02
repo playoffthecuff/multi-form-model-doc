@@ -51,7 +51,7 @@ const schema = z.object({
 	type: z.literal("checkbox"),
 });
 
-export default function CheckboxFormCard({
+export default function CheckboxField({
 	label,
 	description,
 	name,

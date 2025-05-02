@@ -9,10 +9,8 @@ import {
 } from "@/components/ui/select";
 import { Settings, X } from "lucide-react";
 import BadgePopover from "../../common/badge-popover";
-import { Label } from "../../ui/label";
-import { Input } from "@/components/ui/input";
 
-export default function InputTemplate2() {
+export default function SelectTemplate() {
 	return (
 		<>
 			<div className="flex p-0 items-center gap-x-4">
@@ -20,7 +18,7 @@ export default function InputTemplate2() {
 					<Settings />
 				</Button>
 				<CardTitle className="flex h-full items-center justify-center flex-grow text-base border-b">
-					Input
+					Select
 				</CardTitle>
 				<Button size={"icon"} variant={"ghost"} disabled>
 					<X />
@@ -33,7 +31,14 @@ export default function InputTemplate2() {
 					</div>
 					<p>Label</p>
 				</div>
-				<Input placeholder="placeholder" className="pointer-events-none" />
+				<Select>
+					<SelectTrigger className="w-full pointer-events-none text-muted-foreground">
+						<SelectValue placeholder="placeholder" />
+					</SelectTrigger>
+					<SelectContent>
+						<SelectItem value="default value">default value</SelectItem>
+					</SelectContent>
+				</Select>
 			</div>
 		</>
 	);

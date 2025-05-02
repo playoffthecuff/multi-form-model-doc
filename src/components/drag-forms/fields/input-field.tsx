@@ -52,7 +52,7 @@ const schema = z.object({
 	type: z.literal("input"),
 });
 
-export default function InputFormCard({
+export default function InputField({
 	label,
 	description,
 	placeholder,

@@ -1,6 +1,6 @@
 "use client";
 
-import DraggableTemplate from "./checkbox/draggable-template";
+import DraggableTemplate from "./templates/draggable-template";
 
 export default function DragForms() {
 	return (

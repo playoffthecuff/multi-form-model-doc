@@ -1,5 +1,6 @@
-"use client"
+"use client";
 
+import { Card } from "@/components/ui/card";
 import {
 	type Edge,
 	attachClosestEdge,
@@ -10,28 +11,43 @@ import {
 	draggable,
 	dropTargetForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { type ReactNode, useEffect, useRef, useState } from "react";
-import CardWrapper, { type FieldType } from "./card-wrapper";
+import { useEffect, useRef, useState } from "react";
+import type { FieldType } from "../card-wrapper";
+import EdgeHighlight from "./edge-highlight";
+import CheckboxField, { type CheckboxData } from "./checkbox-field";
+import type { DateData } from "./date-field";
+import DateField from "./date-field";
+import type { InputData } from "./input-field";
+import InputFormCard from "./input-field";
+import type { SelectData } from "./select-field";
+import SelectField from "./select-field";
 
-export default function FieldCardWrapper({
-	children,
-	fieldType,
-	index,
-	reorder,
-	add,
-	deleteByIndex,
-}: {
-	children: ReactNode;
-	fieldType: FieldType;
+export type FieldData = CheckboxData | InputData | SelectData | DateData;
+
+interface Props {
+	disabled?: boolean;
 	index: number;
-	reorder: (start: number, finish: number) => void;
+	cardProps: FieldData;
 	add: (index: number, type: FieldType) => void;
+	reorder: (start: number, finish: number) => void;
 	deleteByIndex: (index: number) => void;
-}) {
+	update: (d: FieldData) => void;
+}
+
+export default function DraggableField({
+	cardProps,
+	disabled = false,
+	index,
+	add,
+	reorder,
+	deleteByIndex,
+	update,
+}: Props) {
 	const cardRef = useRef(null);
 	const [dragging, setDragging] = useState(false);
 	const [edge, setEdge] = useState<Edge | null>(null);
 	const [isDragOver, setDragOver] = useState(false);
+
 	useEffect(() => {
 		const element = cardRef.current;
 		if (!element) throw new Error();
@@ -46,7 +62,7 @@ export default function FieldCardWrapper({
 					setDragging(false);
 				},
 				getInitialData() {
-					return { fieldType, initialIndex: index };
+					return { initialIndex: index };
 				},
 			}),
 			dropTargetForElements({
@@ -56,7 +72,7 @@ export default function FieldCardWrapper({
 					return true;
 				},
 				getData({ input }) {
-					const data = { fieldType, initialIndex: index };
+					const data = { initialIndex: index, type: cardProps.type };
 					return attachClosestEdge(data, {
 						element,
 						input,
@@ -86,7 +102,7 @@ export default function FieldCardWrapper({
 					const selfIndex =
 						(self.data.initialIndex as number) + +(edge === "bottom");
 					if (source.data.isTemplate) {
-						add(selfIndex, source.data.fieldType as FieldType);
+						add(selfIndex, "checkbox");
 					} else {
 						reorder(sourceIndex, selfIndex);
 					}
@@ -95,20 +111,49 @@ export default function FieldCardWrapper({
 				},
 			}),
 		);
-	}, [fieldType, reorder, index, edge, add]);
+	}, [reorder, index, edge, add, cardProps.type]);
 
 	const deleteCurrent = () => deleteByIndex(index);
 
 	return (
-		<CardWrapper
-			dragging={dragging}
+		<Card
+			className="flex-col gap-y-2 h-fit p-2 relative cursor-grab"
 			ref={cardRef}
-			highlightBottom={edge === "bottom"}
-			highlightTop={edge === "top"}
-			onDelete={deleteCurrent}
-			type={fieldType}
+			style={{ opacity: dragging ? 0.4 : 1 }}
 		>
-			{children}
-		</CardWrapper>
+			{cardProps.type === "checkbox" && (
+				<CheckboxField
+					{...cardProps}
+					onDelete={deleteCurrent}
+					disabled={disabled}
+					update={update}
+				/>
+			)}
+			{cardProps.type === "input" && (
+				<InputFormCard
+					{...cardProps}
+					onDelete={deleteCurrent}
+					disabled={disabled}
+					update={update}
+				/>
+			)}
+			{cardProps.type === "select" && (
+				<SelectField
+					{...cardProps}
+					onDelete={deleteCurrent}
+					disabled={disabled}
+					update={update}
+				/>
+			)}
+			{cardProps.type === "date" && (
+				<DateField
+					{...cardProps}
+					onDelete={deleteCurrent}
+					disabled={disabled}
+					update={update}
+				/>
+			)}
+			<EdgeHighlight top={edge === "top"} bottom={edge === "bottom"} />
+		</Card>
 	);
 }

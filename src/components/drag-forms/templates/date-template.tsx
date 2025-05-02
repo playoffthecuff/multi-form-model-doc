@@ -5,12 +5,10 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
 import { Calendar, CalendarIcon, Settings, X } from "lucide-react";
-import { date } from "zod";
 import BadgePopover from "../../common/badge-popover";
 
-export default function DateTemplate2() {
+export default function DateTemplate() {
 	return (
 		<>
 			<div className="flex p-0 items-center gap-x-4">

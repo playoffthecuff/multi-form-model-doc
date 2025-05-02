@@ -61,7 +61,7 @@ const schema = z.object({
 	type: z.literal("select"),
 });
 
-export default function SelectFormCard({
+export default function SelectField({
 	label,
 	description,
 	name,
