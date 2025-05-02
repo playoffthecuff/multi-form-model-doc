@@ -14,7 +14,7 @@ function Popover({
 function PopoverTrigger({
   ...props
 }: React.ComponentProps<typeof PopoverPrimitive.Trigger>) {
-  return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />
+  return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} className="has-[>svg]:px-[9px] gap-x-[11px]"/>
 }
 
 function PopoverContent({
